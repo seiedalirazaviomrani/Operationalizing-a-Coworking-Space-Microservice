@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: coworking-project
+  name: coworking-project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coworking-project
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: coworking-project
+    spec:
+      containers:
+      - image: 
+        imagePullPolicy: Always
+        name: coworking-project
+        ports:
+        - containerPort: 5153
+          protocol: TCP
+        livenessProbe:
+           httpGet:
+             path: /health_check
+             port: 5153
+        readinessProbe:
+           httpGet:
+             path: /health_check
+             port: 5153
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
